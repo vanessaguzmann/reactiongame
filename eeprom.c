@@ -1,3 +1,4 @@
+
 /**
  * @file EEPROM.c
  * @brief I2C driver for 24LC256 on STM32L4A6
@@ -7,7 +8,7 @@
  *  - Single-byte read:  dummy write of 2 byte addr, repeated START, and 1 byte read
  *
  * @date Nov. 7, 2025
- * @author William Chung + Vanessa Guzman
+ * @author Karina Wilson
  */
 
 #include "EEPROM.h"
@@ -150,3 +151,61 @@ uint8_t EEPROM_read(uint16_t addr) {
    return b;                                    // return read byte
 }
 
+//loops thru characters in name, saves to 3 consecutive addresses
+//last 2 addresses are for score (high byte and low byte)
+void saveLeaderboard(Player *board, uint8_t count) {
+    uint16_t addr = 0;
+    for (uint8_t i = 0; i < count; i++) {
+        for (uint8_t j = 0; j < NAME_LEN; j++)
+            EEPROM_write(addr++, board[i].name[j]);
+        EEPROM_write(addr++, (board[i].score >> 8) & 0xFF);
+        EEPROM_write(addr++, board[i].score & 0xFF);
+    }
+}
+
+//uses *board to point to each player in array
+//reads initials, then score
+uint8_t loadLeaderboard(Player *board) {
+    uint16_t addr = 0;
+    uint8_t count = 0;
+    for (uint8_t i = 0; i < MAX_PLAYERS; i++) {
+        for (uint8_t j = 0; j < NAME_LEN; j++)
+            board[i].name[j] = EEPROM_read(addr++);
+        	delay_ms(5);
+        board[i].score = ((uint16_t)EEPROM_read(addr++) << 8);
+        board[i].score |= EEPROM_read(addr++);
+        if (board[i].score > 0 && board[i].score < 9999) //ensure score is valid
+            count++;
+    }
+    return count;
+}
+
+void sortLeaderboard(Player *board, uint8_t count) {
+	for(uint8_t i = 0; i < count-1; i++) {
+		for (uint8_t j = 1; j < count; j++){
+			if (board[i].score < board[j].score){
+				Player temp = board[i]; //create temp variable so we don't lose entry
+				board[j] = board[i];  //swap
+				temp = board[j];
+
+			}
+		}
+
+	}
+}
+
+uint8_t addScore(Player *board, uint8_t count, const char *name, uint16_t score) {
+    if (count < MAX_PLAYERS) {
+        for (uint8_t i = 0; i < NAME_LEN; i++)  //when !10 entries
+            board[count].name[i] = name[i];
+        board[count].score = score;
+        count++; //increase count until reaching 10 players
+    } else if (score > board[count - 1].score) { //if newest score > lowest score
+        for (uint8_t i = 0; i < NAME_LEN; i++)
+            board[count - 1].name[i] = name[i]; //replace lowest score with new score
+        board[count - 1].score = score;
+    }
+    sortLeaderboard(board, count);
+    saveLeaderboard(board, count);
+    return count;
+}
