@@ -1,3 +1,4 @@
+
 /**
  * @file EEPROM.h
  * @brief Header I2C driver for 24LC256 on STM32L4A6
@@ -15,6 +16,15 @@
 
 #include "stm32l4xx.h"
 #include <stdint.h>
+
+#define MAX_PLAYERS 10
+#define NAME_LEN 3
+#define EEPROM_START_ADDR 0x0000
+
+typedef struct {
+    char name[NAME_LEN];
+    uint16_t score;
+} Player;
 
 /**
  * @brief configure PB8 (SCL) and PB9 (SDA) for I2C1 AF4
@@ -42,5 +52,8 @@ void EEPROM_write(uint16_t addr, uint8_t data);
  * @return uint8_t  8-bit data read from EEPROM
  */
 uint8_t EEPROM_read(uint16_t addr);
-
+void saveLeaderboard(Player *board, uint8_t count);
+uint8_t loadLeaderboard(Player *board);
+void sortLeaderboard(Player *board, uint_8 count);
+uint8_t addScore(Player *board, uint8_t count, const char *name, uint16_t score);
 #endif /* SRC_EEPROM_H_ */
