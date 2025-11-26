@@ -33,10 +33,22 @@ uart.h
 #include "stm32l4xx_hal.h"
 
 // ---------- Function Prototypes --------------------------------------------
-void setup_LPUART1(void);
-void LPUART1_Print( const char* message );
-void LPUART1_ESC_Print( const char* message );
-void LPUART1_ESC_Print_Deliverable(void);
-void LPUART1_IRQHandler( void  );
+void UART_setup(void);
+void LPUART_Print( const char* message );
+void LPUART_Print_string(const char* s_message, int length);
+void LPUART_ESC_Print(const char* esc_msg);
+void LPUART_wait_transmit(void);
+void LPUART_Set_Cursor_Location(uint8_t row, uint8_t col);
+void draw_border(void);
+void LPUART1_Game_Setup(void);
+void waitForStart(void);
+void getInitials(char *name);
+void A8_Extra_Credit_Table(void);
+void A8_ADC_Chart_Borders(void);
+void LPUART_Draw_Corners(void);
+void LPUART_Draw_Inner_Ends(void);
+void uint_to_str(uint16_t value, char *buf);
+void LPUART_Chart_Words(void);
+
 
 #endif // UART_H
