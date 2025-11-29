@@ -54,6 +54,8 @@ void EEPROM_write(uint16_t addr, uint8_t data);
 uint8_t EEPROM_read(uint16_t addr);
 void saveLeaderboard(Player *board, uint8_t count);
 uint8_t loadLeaderboard(Player *board);
-void sortLeaderboard(Player *board, uint_8 count);
+void sortLeaderboard(Player *board, uint8_t count);
 uint8_t addScore(Player *board, uint8_t count, const char *name, uint16_t score);
+extern Player leaderboard[MAX_PLAYERS];
+
 #endif /* SRC_EEPROM_H_ */
