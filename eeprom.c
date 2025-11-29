@@ -8,10 +8,11 @@
  *  - Single-byte read:  dummy write of 2 byte addr, repeated START, and 1 byte read
  *
  * @date Nov. 7, 2025
- * @author Karina Wilson
+ * @author William Chung + Vanessa Guzman
  */
 
 #include "EEPROM.h"
+#include "delay.h"
 
 #define EEPROM_ADDR7 0x51        //A2:A1:A0 = 0b001 -> 0x51.
 #define I2C_TIMINGR  0x00303D5B  // 16 MHz I2C kernel
@@ -171,7 +172,7 @@ uint8_t loadLeaderboard(Player *board) {
     for (uint8_t i = 0; i < MAX_PLAYERS; i++) {
         for (uint8_t j = 0; j < NAME_LEN; j++)
             board[i].name[j] = EEPROM_read(addr++);
-        	delay_ms(5);
+        	delay_us(5);
         board[i].score = ((uint16_t)EEPROM_read(addr++) << 8);
         board[i].score |= EEPROM_read(addr++);
         if (board[i].score > 0 && board[i].score < 9999) //ensure score is valid
