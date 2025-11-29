@@ -20,6 +20,15 @@
 #include "main.h"
 #include "led_timer.h"
 #include "delay.h"
+#include "EEPROM.h"
+#include "uart.h"
+
+Player leaderboard[MAX_PLAYERS];
+
+
+
+
+
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -84,6 +93,9 @@ int main(void)
   /* USER CODE BEGIN SysInit */
   led_init();
   rng_init();
+  UART_setup();
+  EEPROM_init();
+  uint8_t leaderboardCount = loadLeaderboard(leaderboard);
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -181,3 +193,4 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
