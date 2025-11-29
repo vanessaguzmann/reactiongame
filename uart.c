@@ -29,6 +29,7 @@ uart.c
 #include "uart.h"
 #include "main.h"
 #include "EEPROM.h"
+//#include "delay.h"
 
 /*
  * Function 1/5:  setup_LPUART1
@@ -227,41 +228,41 @@ void LPUART_Set_Cursor_Location(uint8_t row, uint8_t col)
 *
 * returns: nothing
 */
-void draw_border(void) {
-  // Set cyan color and home
-  LPUART_ESC_Print("36m");
-  LPUART_ESC_Print("H");
-  // Draw vertical borders
-  for (int border_row = 1; border_row <= GAME_ROWS; border_row++) {
-	  LPUART_Set_Cursor_Location(border_row, 1);
-	  LPUART_Print_string("║", 0);
-
-	  LPUART_Set_Cursor_Location(border_row, GAME_COLS);
-	  LPUART_Print_string("║", 0);
-
-  }
-  // Draw horizontal borders
-  for (int border_col = 1; border_col <= GAME_COLS; border_col++) {
-	  LPUART_Set_Cursor_Location(1, border_col);
-	  LPUART_Print_string("═", 0);
-
-	  LPUART_Set_Cursor_Location(GAME_ROWS, border_col);
-	  LPUART_Print_string("═", 0);
-
-   }
-   // Draw corners
-  LPUART_Set_Cursor_Location(1, 1);
-  LPUART_Print_string("╔", 0);
-
-  LPUART_Set_Cursor_Location(1, GAME_COLS);
-  LPUART_Print_string("╗", 0);
-
-  LPUART_Set_Cursor_Location(GAME_ROWS, 1);
-  LPUART_Print_string("╚", 0);
-
-  LPUART_Set_Cursor_Location(GAME_ROWS, GAME_COLS);
-  LPUART_Print_string("╝", 0);
-}
+//void draw_border(void) {
+//  // Set cyan color and home
+//  LPUART_ESC_Print("36m");
+//  LPUART_ESC_Print("H");
+//  // Draw vertical borders
+//  for (int border_row = 1; border_row <= GAME_ROWS; border_row++) {
+//	  LPUART_Set_Cursor_Location(border_row, 1);
+//	  LPUART_Print_string("║", 0);
+//
+//	  LPUART_Set_Cursor_Location(border_row, GAME_COLS);
+//	  LPUART_Print_string("║", 0);
+//
+//  }
+//  // Draw horizontal borders
+//  for (int border_col = 1; border_col <= GAME_COLS; border_col++) {
+//	  LPUART_Set_Cursor_Location(1, border_col);
+//	  LPUART_Print_string("═", 0);
+//
+//	  LPUART_Set_Cursor_Location(GAME_ROWS, border_col);
+//	  LPUART_Print_string("═", 0);
+//
+//   }
+//   // Draw corners
+//  LPUART_Set_Cursor_Location(1, 1);
+//  LPUART_Print_string("╔", 0);
+//
+//  LPUART_Set_Cursor_Location(1, GAME_COLS);
+//  LPUART_Print_string("╗", 0);
+//
+//  LPUART_Set_Cursor_Location(GAME_ROWS, 1);
+//  LPUART_Print_string("╚", 0);
+//
+//  LPUART_Set_Cursor_Location(GAME_ROWS, GAME_COLS);
+//  LPUART_Print_string("╝", 0);
+//}
 
 
 /*
@@ -317,30 +318,28 @@ void LPUART1_Game_Setup(void) {
 	LPUART_Print_string("            Cal Poly E329 - Team LEDZ         ", 0);
 
 
-
-	  delay_us(4000000);
-	  delay_us(1000000);
-
-
-	  LPUART_ESC_print("[2J");   // Clear screen
-	  LPUART_ESC_print("[H");    // Move to home position
-	  draw_border();              // Draw the border
-	  LPUART_ESC_print("[H");    // Reset to home again
-	  LPUART_ESC_print("[12B");  // Move down 12 lines
-	  LPUART_ESC_print("[40C");  // Move right 40 columns
-	  //LPUART1_print("O");         // Print the O
+//
+//	  delay_us(4000000);
+//	  delay_us(1000000);
+//
+//
+//	  LPUART_ESC_Print("[2J");   // Clear screen
+//	  LPUART_ESC_Print("[H");    // Move to home position
+//	  draw_border();              // Draw the border
+//	  LPUART_ESC_Print("[H");    // Reset to home again
+//	  LPUART_ESC_Print("[12B");  // Move down 12 lines
+//	  LPUART_ESC_Print("[40C");  // Move right 40 columns
+//	  //LPUART1_print("O");         // Print the O
 
 }
 
 void waitForStart(void)
 {
-    char c;
-
     LPUART_Print("\r\nPress any key to start...\r\n");
 
     // Wait until a character is received
     while (!(LPUART1->ISR & USART_ISR_RXNE));
-    c = LPUART1->RDR; // read it (doesn’t matter what key)
+    (void)LPUART1->RDR; // read it (doesn’t matter what key)
     LPUART_ESC_Print("[2J");
     LPUART_ESC_Print("[H");
 
