@@ -1,22 +1,31 @@
-/**
-  ******************************************************************************
-  * @file           : led_timer.h
-  * @brief          : Header for led_timer.c.
-  *                   ...
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2025 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
+/*
+------------------------------------------------------------------------------
+led_timer.h
+------------------------------------------------------------------------------
+* USER CODE BEGIN Header
+******************************************************************************
+* EE 329 nvic.h
+******************************************************************************
+* @file           : led_timer.h
+* @brief          : led operations body
+* project         : EE 329 Final Project
+* authors         : Vanessa G
+* version         : 1
+* date            : 11/21/2025
+* compiler        : STM32CubeIDE v.1.19.0
+* target          : NUCLEO-L4A6ZG
+* clocks          : 4 MHz MSI to AHB2
+* wiring       	  : PC8, 9, 10, 11, 12
+* attachment	  : 560 ohm resistors to cathode of LEDS
+* @attention      : (c) 2023 STMicroelectronics.  All rights reserved.
+******************************************************************************
+* REVISION HISTORY
+******************************************************************************
+* 11/23/2025      :	Created file
+******************************************************************************
+*/
 
-// ----------------------------------------------- #includes for led_timer.c ---
+// ----------------------------------------------- #includes for led_timer.c -
 
 #ifndef LED_TIMER_H
 #define LED_TIMER_H
@@ -24,22 +33,29 @@
 #include "stm32l4xx_hal.h"
 #include <stdint.h>      // for uint32_t an more
 #include <math.h>		 // for math functions
+#include <stdbool.h>
 
-// ---------- Type Switch (re-comment in one-line change, repeat in main.c) ----
-typedef uint8_t var_type;
-//typedef int32_t var_type;
-//typedef int64_t var_type;
-//typedef float var_type;
-//typedef double var_type;
-/* USER CODE END PTD */
-
-// ---------- Defines ----------------------------------------------------------
+// ---------- Defines --------------------------------------------------------
 #define LED_MASK (GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12);
 
-// ---------- Function Prototypes ----------------------------------------------
-void led_init(void);       	// enables GPIOC, config PC8..PC11 outputs, LEDs off
-void timing_execution(var_type (*test_function)(var_type));	// times func. execution
-void flash_led(void);
-void flash_sequence(void);
+#define MAX_SEQ_LEN 32
+extern volatile uint32_t sw_delay_ms;
+
+// ---------- Custom Array Structure -----------------------------------------
+typedef struct {
+    uint8_t data[MAX_SEQ_LEN];
+    uint32_t length;
+} Sequence;
+
+// ---------- Function Prototypes --------------------------------------------
+void led_init(void);     // enables GPIOC, config PC8..PC11 outputs, LEDs off
+void flash_led(void);			// turn every LED on
+uint32_t flash_rnd_led(void);	// turns on random LED
+void test_servo(void);			// turns on servo on and off
+void Sequence_Init(Sequence *seq); // initialize sequence variable type
+uint8_t Sequence_Append(Sequence *seq, uint8_t value);
+void generate_led_sequence(Sequence *seq);
+void show_sequence(const Sequence *seq);
+void run_reaction_game(void);
 
 #endif // LED_TIMER_H
