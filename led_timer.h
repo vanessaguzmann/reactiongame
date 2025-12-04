@@ -15,13 +15,20 @@ led_timer.h
 * compiler        : STM32CubeIDE v.1.19.0
 * target          : NUCLEO-L4A6ZG
 * clocks          : 4 MHz MSI to AHB2
-* wiring       	  : PC8, 9, 10, 11, 12
-* attachment	  : 560 ohm resistors to cathode of LEDS
-* @attention      : (c) 2023 STMicroelectronics.  All rights reserved.
+* wiring    	  : PC8-12 connected to 560ohm resistors, LEDS lead to GND
+* attachment      : LED1-5 attached to PC8-12, respectively
+* 			    	1: white
+* 					2: yellow
+* 					3: green
+* 					4: blue
+* 					5: red
+* @attention  	  : (c) 2023 STMicroelectronics.  All rights reserved.
 ******************************************************************************
 * REVISION HISTORY
-******************************************************************************
-* 11/23/2025      :	Created file
+* 10/08/25	Created file
+* 11/19/25	Removed nibble count from V1
+* 			Included delay and moved software delay
+* 11/23/25    Added array typedef structure and leveling logic
 ******************************************************************************
 */
 
