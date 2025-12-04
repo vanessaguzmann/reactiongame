@@ -22,9 +22,12 @@ delay.c
 ******************************************************************************
 */
 
+#include "buttons.h"
 #include "delay.h"
 
-// --------------------------------------------------- delay.c w/o #includes ---
+volatile uint32_t g_ms_ticks = 0;
+
+// ------------------------------------------------- delay.c w/o #includes ---
 // configure SysTick timer for use with delay_us().
 // warning: breaks HAL_delay() by disabling interrupts for shorter delay timing.
 void SysTick_Init(void) {
@@ -46,7 +49,7 @@ void delay_us(const uint32_t time_us) {
 }
 
 /*
- * Function 3/DD:  software_delay
+ * Function 3:  software_delay
  * --------------------
  * empty for loop
  *
@@ -64,4 +67,31 @@ void software_delay(int desired_time) {
 		// Empty for loop to create software delay
 		;
 	}
+}
+
+/*
+ * Function 4:  SysTick_Handler
+ * --------------------
+ * SysTick interrupt handler (called every 1 ms) and
+ *    adds ms ticks each run
+ *
+ *	takes in: nothing
+ *
+ *  returns: nothing
+ */
+void SysTick_Handler(void) {
+   g_ms_ticks++;
+}
+
+/*
+ * Function 5:  get_ms
+ * --------------------
+ * counts the ticks
+ *
+ *	takes in: nothing
+ *
+ *  returns: system time in ms
+ */
+uint32_t get_ms(void) {
+   return g_ms_ticks;
 }
