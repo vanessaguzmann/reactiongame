@@ -19,6 +19,7 @@ delay.h
 ******************************************************************************
 * REVISION HISTORY
 * 10/08/25	Created file
+* 11/30/25  Added ms counter
 ******************************************************************************
 */
 
@@ -30,10 +31,13 @@ delay.h
 #include "stm32l4a6xx.h"
 #include <stdint.h>      // for uint32_t an more
 
+extern volatile uint32_t g_ms_ticks;
+
 // --- Function Prototypes ---
 void SysTick_Init(void);
 void delay_us(const uint32_t time_us);
 void software_delay(int desired_time);
-//void delay_ms(uint32_t ms);
+void SysTick_Handler(void);
+uint32_t get_ms(void);
 
 #endif // DELAY_H
